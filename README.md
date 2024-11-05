@@ -1,36 +1,148 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Incident Management System
+
+A Next.js application for managing support incidents.
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18 or later
+- MongoDB
+- Docker and Docker Compose (for containerized development)
+
+### Installation
+
+#### Local Development
+
+1. Clone the repository:
+
+```bash
+git clone <repository-url>
+cd incident-app
+```
+
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+3. Create a `.env.local` file:
+
+```env
+MONGODB_URI=mongodb://localhost:27017/incidents
+```
+
+4. Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+#### Docker Development
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. First time setup or after dependencies change:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+# Build the development containers
+docker compose -f docker-compose.dev.yml build
 
-## Learn More
+# Start the development environment
+docker compose -f docker-compose.dev.yml up
+```
 
-To learn more about Next.js, take a look at the following resources:
+2. Regular development commands:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+# Start the development environment
+docker compose -f docker-compose.dev.yml up
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# Stop the environment
+docker compose -f docker-compose.dev.yml down
 
-## Deploy on Vercel
+# View logs
+docker compose -f docker-compose.dev.yml logs -f app
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# Rebuild and start (if dependencies change)
+docker compose -f docker-compose.dev.yml up --build
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The application will be available at http://localhost:3000
+
+### Features
+
+- Create, read, update, and delete incidents
+- Sort incidents by any column
+- Pagination
+- Responsive design
+- MongoDB integration
+
+### API Routes
+
+- GET /api/incidents - List all incidents
+- POST /api/incidents - Create a new incident
+- GET /api/incidents/[id] - Get a specific incident
+- PUT /api/incidents/[id] - Update an incident
+- DELETE /api/incidents/[id] - Delete an incident
+
+## Development
+
+The Docker development setup includes:
+
+- Hot reloading (changes to your code will automatically rebuild)
+- Volume mounting for local development files
+- MongoDB container with persistent data
+- Development-specific environment variables
+
+### Project Structure
+
+```
+├── app
+│ ├── api/
+│ │ └── incidents/
+│ ├── components/
+│ │ ├── IncidentForm.tsx
+│ │ ├── IncidentGrid.tsx
+│ │ └── ui/
+│ └── lib/
+│   ├── db.ts
+│   ├── models/
+│   └── utils.ts
+├── docker-compose.dev.yml
+├── Dockerfile.dev
+└── next.config.mjs
+```
+
+## Testing
+
+```bash
+# Run tests
+npm test
+
+# Run tests in watch mode
+npm run test:watch
+```
+
+## Deployment
+
+For production deployment:
+
+```bash
+# Build the production image
+docker build -t incident-app .
+
+# Run the production container
+docker run -p 3000:3000 -e MONGODB_URI=your_mongodb_uri incident-app
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details
